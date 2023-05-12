@@ -26,3 +26,13 @@ jobs:
 
       - name: Push Docker image
         run: docker push ${{ env.IMAGE_NAME }}
+
+  validate-deployment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+
+      - name: Helm Validate
+        run: helm template charts/energy-monitor
