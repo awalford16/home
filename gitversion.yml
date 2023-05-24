@@ -1,2 +1,12 @@
 mode: ContinuousDeployment
-tagPrefix: "0.0"
+nextVersion: 0.1
+branches:
+  main:
+    regex: ^master$|^main$
+    mode: ContinuousDelivery
+    increment: Patch
+    is-mainline: true
+  docker-tags:
+    is-mainline: false
+    increment: Patch
+    regex: ^docker-tags$
