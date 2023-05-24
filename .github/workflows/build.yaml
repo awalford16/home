@@ -18,6 +18,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0
+        with:
+          versionSpec: "5.x"
+
+      - name: Determine Version
+        uses: gittools/actions/gitversion/execute@v0
+
       - name: Build Docker image
         run: docker build -t ${{ env.IMAGE_NAME }} .
 
