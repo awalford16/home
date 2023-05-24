@@ -6,7 +6,3 @@ branches:
     mode: ContinuousDelivery
     increment: Patch
     is-mainline: true
-  docker-tags:
-    is-mainline: false
-    increment: Patch
-    regex: ^docker-tags$
