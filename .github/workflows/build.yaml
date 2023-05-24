@@ -4,11 +4,12 @@ on:
   push:
     branches:
       - main
+      - docker-tags
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/home:latest
+  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/home
 
 jobs:
   build-and-push:
@@ -18,8 +19,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Install GitVersion
+        run: |
+          # Install GitVersion (replace with your installation command)
+          choco install gitversion.portable
+
+      - name: Run GitVersion
+        run: gitversion
+
       - name: Build Docker image
-        run: docker build -t ${{ env.IMAGE_NAME }} .
+        run: docker build -t ${{ env.IMAGE_NAME }}:{{ env.GitVersion.SemVer }} .
 
       - name: Log in to Docker Hub
         run: docker login --username ${{ env.DOCKER_USERNAME }} --password-stdin <<< ${{ env.DOCKER_PASSWORD }}
