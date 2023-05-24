@@ -29,13 +29,13 @@ jobs:
         uses: gittools/actions/gitversion/execute@v0
 
       - name: Build Docker image
-        run: docker build -t ${{ env.IMAGE_NAME }} .
+        run: docker build -t ${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.semVer }}  .
 
       - name: Log in to Docker Hub
         run: docker login --username ${{ env.DOCKER_USERNAME }} --password-stdin <<< ${{ env.DOCKER_PASSWORD }}
 
       - name: Push Docker image
-        run: docker push ${{ env.IMAGE_NAME }}
+        run: docker push ${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.semVer }}
 
   validate-deployment:
     runs-on: ubuntu-latest
