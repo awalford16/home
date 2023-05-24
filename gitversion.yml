@@ -1,5 +1,2 @@
-mode: Mainline
-assemblyVersioningScheme: MajorMinorPatch
-assemblyFileVersioningScheme: MajorMinorPatch
-assemblyInformationalFormat: "{Major}.{Minor}.{Patch}"
+mode: ContinuousDeployment
 tagPrefix: "0.0"
