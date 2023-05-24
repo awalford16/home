@@ -1,4 +1,4 @@
-mode: Mainline
+mode: ContinuousDeployment
 nextVersion: 0.1
 branches:
   main:
