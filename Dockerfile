@@ -3,8 +3,9 @@ FROM golang:1.20
 WORKDIR /app
 COPY pkg .
 
-ENV GOOS=linux 
-ENV GOARCH=arm
+ARG GOARCH=amd64
+ENV GOARCH=${GOARCH}
+ENV GOOS=linux
 
 RUN go mod download
 RUN go build -o home
