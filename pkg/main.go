@@ -5,7 +5,7 @@ import (
         "time"
         "os"
 
-        "example.com/home_monitor/energy"
+        "github.com/awalford16/home/energy"
 
         "github.com/prometheus/client_golang/prometheus"
         "github.com/prometheus/client_golang/prometheus/promauto"

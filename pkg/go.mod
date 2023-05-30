@@ -1,4 +1,4 @@
-module example.com/home_monitor
+module github.com/awalford16/home
 
 go 1.20
 
