@@ -25,27 +25,27 @@ service:
 envVars:
   - name: OCTOPUS_ENERGY_API_KEY
     valueFrom:
-      secretRefKey: 
+      secretKeyRef: 
         name: octopus-energy
         key: API_KEY
   - name: METER_MPAN
     valueFrom:
-      secretRefKey: 
+      secretKeyRef: 
         name: octopus-energy
         key: MPAN
   - name: METER_SERIAL_NUMBER
     valueFrom:
-      secretRefKey: 
+      secretKeyRef: 
         name: octopus-energy
         key: SERIAL_NUMBER
   - name: OCTOPUS_PRODUCT
     valueFrom:
-      secretRefKey: 
+      secretKeyRef: 
         name: octopus-energy
         key: PRODUCT
-  - nane: OCTOPUS_TARIFF
+  - name: OCTOPUS_TARIFF
     valueFrom:
-      secretRefKey: 
+      secretKeyRef: 
         name: octopus-energy
         key: TARIFF
 
