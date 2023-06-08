@@ -4,4 +4,3 @@ branches:
   main:
     regex: ^main$
     increment: Patch
-    is-mainline: true
