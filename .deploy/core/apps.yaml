@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: core
+  namespace: flux-system
+data:
+  home.yml: |
+    repositories:
+      home:
+        url: https://github.com/awalford16/home
+
+    apps:
+      energy-monitor:
+        repo: home
+        namespace: home
+        type: GitRepository
+        path: .deploy/energy-monitor

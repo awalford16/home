@@ -1,9 +1,0 @@
-repositories:
-  home:
-    url: https://github.com/awalford16/home
-
-apps:
-  energy-monitor:
-    repo: home
-    type: GitRepository
-    path: .deploy/energy-monitor
