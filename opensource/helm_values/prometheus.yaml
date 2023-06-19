@@ -1,0 +1,15 @@
+server:
+  persistentVolume:
+    storageClass: nfs
+
+  emptyDir:
+    sizeLimit: 10Gi
+
+  statefulSet:
+    enabled: true
+
+alertmanager:
+  enabled: false
+
+prometheus-pushgateway:
+  enabled: false
