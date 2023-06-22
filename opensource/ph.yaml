@@ -1,14 +1,9 @@
 serviceDns:
   type: LoadBalancer # Configure MetalLB to used a dedicated "virtual" IP to expose the DNS server
-  annotations:
-    metallb.universe.tf/allow-shared-ip: pihole-svc
 
 ingress:
   # -- Generate a Ingress resource
   enabled: true
-
-  # -- Specify an ingressClassName
-  ingressClassName: nginx
 
   # -- Annotations for the ingress
   annotations: {}
