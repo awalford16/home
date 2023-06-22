@@ -1,11 +1,12 @@
 flux-core:
-  home:
-    url: https://awalford16.github.io/charts
+  repositories:
+    mojo:
+      url: https://mojo2600.github.io/pihole-kubernetes/
 
   apps:
     pihole:
       type: HelmRepository
-      repo: home
+      repo: mojo
       version: 2.14.0
       valuesFrom:
         - kind: ConfigMap
