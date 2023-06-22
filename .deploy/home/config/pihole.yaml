@@ -1,5 +1,5 @@
 serviceDns:
-  type: LoadBalancer # Configure MetalLB to used a dedicated "virtual" IP to expose the DNS server
+  type: LoadBalancer
 
 ingress:
   # -- Generate a Ingress resource
