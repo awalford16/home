@@ -2,6 +2,8 @@ flux-core:
   repositories:
     mojo:
       url: https://mojo2600.github.io/pihole-kubernetes/
+    nfs:
+      url: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
 
   apps:
     pihole:
@@ -11,4 +13,12 @@ flux-core:
       valuesFrom:
         - kind: ConfigMap
           name: pihole-values
+          valuesKey: values.yaml
+    nfs-subdir-external-provisioner:
+      type: HelmRepository
+      repo: nfs
+      version: 4.0.18
+      valuesFrom:
+        - kind: ConfigMap
+          name: nfs-values
           valuesKey: values.yaml
