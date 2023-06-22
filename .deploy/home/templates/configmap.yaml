@@ -1,0 +1,11 @@
+{{- range $service, $config := .Values.flux-core.apps }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ $service }}-values"
+  namespace: {{ .Release.Namespace }}
+data:
+  values.yaml: |
+    {{ .Files.Get (printf "config/%s" $service) | indent 4 }}
+{{- end }}
