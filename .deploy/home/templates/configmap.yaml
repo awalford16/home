@@ -1,18 +1,12 @@
+{{ $flux := index .Values "flux-core" }}
+{{- range $app, $config := $flux.apps }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "pihole-values"
-  namespace: {{ $.Release.Namespace }}
+  name: "{{ $app }}-values"
+  namespace: {{ default $.Release.Namespace $config.namespace}}
 data:
   values.yaml:
-    {{ toYaml (.Files.Get "config/pihole.yaml") | indent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: "nfs-values"
-  namespace: {{ $.Release.Namespace }}
-data:
-  values.yaml:
-    {{ toYaml (.Files.Get "config/nfs.yaml") | indent 4 }}
+    {{ toYaml ($.Files.Get (printf "config/%s.yaml" $app)) | indent 4 }}
+{{ end }}

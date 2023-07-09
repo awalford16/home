@@ -1,5 +1,6 @@
 server:
   persistentVolume:
+    subPath: data
     storageClass: nfs
 
   emptyDir:
