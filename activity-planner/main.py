@@ -11,7 +11,12 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+SCOPES = [
+    'https://www.googleapis.com/auth/calendar.events'
+]
+
+SHARED_CALENDAR="primary"
+TIMEZONE="UTC"
 
 
 def main():
@@ -28,6 +33,7 @@ def main():
     events = Events(availability_start, one_week_from_now)
     busy = api.get_calendar_events("shannoncantrill@gmail.com") + api.get_calendar_events("primary") + events.include_activity(20, 6) + events.include_activity(8, 16, True)
 
+    # Determine times where we can do activities
     activities = events.schedule_event(events.get_availbility(busy))
 
     for activity in activities.keys():
@@ -37,14 +43,14 @@ def main():
             "summary": activity,
             "start": {
                 "dateTime": activities[activity]["start"].strftime("%Y-%m-%dT%H:%M:%S"),
-                "timeZone": "UTC",
+                "timeZone": TIMEZONE,
             },
             "end": {
                 "dateTime": activities[activity]["end"].strftime("%Y-%m-%dT%H:%M:%S"),
-                "timeZone": "UTC",
+                "timeZone": TIMEZONE,
             }
         }
-        api.create_event("primary", event)
+        api.create_event(SHARED_CALENDAR, event)
 
 
 class Events:
@@ -55,6 +61,7 @@ class Events:
             "tennis": 1,
             "run": 1,
             "swim": 1,
+            "yoga": 1,
         }
 
     def include_activity(self, start_hour, end_hour, only_weekdays=False):
@@ -151,7 +158,6 @@ class GoogleAPI:
         try:
             # Call the Calendar API
             now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-            print('Getting the upcoming 10 events')
             events_result = self.service.events().list(calendarId=calendar, timeMin=now, timeZone='UTC',
                                                 maxResults=10, singleEvents=True,
                                                 orderBy='startTime').execute()
@@ -176,7 +182,7 @@ class GoogleAPI:
     def create_event(self, calendar, event):
         try:
             event = self.service.events().insert(calendarId=calendar, body=event).execute()
-            print("Event created %s", event["summary"])
+            print("Event created %s at %s" % (event["summary"], event["start"]["dateTime"]))
         except HttpError as error:
             print("An error occured: %s" % error)
 
