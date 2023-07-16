@@ -1,5 +1,11 @@
 # Activity Planner
 
+## TODO:
+
+- Dont schedule events within 1 hour of other events
+- Account for sleep hours with night shifts
+- Run as cron job
+
 ## Process
 
 A cron job that:
