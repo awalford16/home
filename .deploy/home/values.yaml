@@ -13,8 +13,7 @@ flux-core:
 
   apps:
     pihole:
-      # namespace: home
-      type: HelmRepository
+      namespace: home
       repo: mojo
       version: 2.14.0
       valuesFrom:
@@ -22,8 +21,7 @@ flux-core:
           name: pihole-values
           valuesKey: values.yaml
     nfs-subdir-external-provisioner:
-      # namespace: storage
-      type: HelmRepository
+      namespace: storage
       repo: nfs
       version: 4.0.18
       valuesFrom:
@@ -32,7 +30,6 @@ flux-core:
           valuesKey: values.yaml
     grafana:
       namespace: monitoring
-      type: HelmRepository
       repo: grafana
       version: 6.55.0
       valuesFrom:
@@ -41,7 +38,6 @@ flux-core:
           valuesKey: values.yaml
     prometheus:
       namespace: monitoring
-      type: HelmRepository
       repo: prometheus
       version: 21.0.0
       valuesFrom:
