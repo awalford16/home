@@ -1,7 +1,7 @@
 server:
   persistentVolume:
     subPath: data
-    storageClass: nfs
+    storageClass: nfs-client
 
   emptyDir:
     sizeLimit: 10Gi

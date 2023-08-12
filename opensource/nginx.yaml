@@ -1,7 +1,0 @@
-nginx:
-  defaultBackend:
-    enabled: false
-
-service:
-  annotations:
-    metallb.universe.tf/address-pool: home

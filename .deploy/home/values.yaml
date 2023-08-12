@@ -1,8 +1,10 @@
 flux-core:
   repositories:
     mojo:
+      namespace: home
       url: https://mojo2600.github.io/pihole-kubernetes/
     nfs:
+      namespace: storage
       url: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
     grafana:
       namespace: monitoring
@@ -10,6 +12,9 @@ flux-core:
     prometheus:
       namespace: monitoring
       url: https://prometheus-community.github.io/helm-charts
+    twingate:
+      namespace: networking
+      url: https://twingate.github.io/helm-charts
 
   apps:
     pihole:
@@ -44,3 +49,13 @@ flux-core:
         - kind: ConfigMap
           name: prometheus-values
           valuesKey: values.yaml
+    twingate-emerald-yak:
+      namespace: networking
+      path: connector
+      repo: twingate
+      version: 0.1.18
+      valuesFrom:
+        - kind: ConfigMap
+          name: twingate-emerald-yak-values
+          valuesKey: values.yaml
+

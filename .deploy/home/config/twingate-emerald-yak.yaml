@@ -1,0 +1,3 @@
+connector:
+  network: walford
+  existingSecret: twingate-access
