@@ -1,8 +1,9 @@
 .env
-secrets.yaml
+secrets/
 
 *.tgz
 
 credentials.json
 token.json
 venv/
+charts/

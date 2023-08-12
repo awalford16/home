@@ -1,0 +1,15 @@
+serviceDns:
+  type: LoadBalancer
+
+ingress:
+  # -- Generate a Ingress resource
+  enabled: true
+
+  # -- Annotations for the ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    # virtualHost (default value is pi.hole) will be appended to the hosts
+    - pihole.walford.io

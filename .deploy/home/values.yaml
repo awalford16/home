@@ -1,0 +1,61 @@
+flux-core:
+  repositories:
+    mojo:
+      namespace: home
+      url: https://mojo2600.github.io/pihole-kubernetes/
+    nfs:
+      namespace: storage
+      url: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+    grafana:
+      namespace: monitoring
+      url: https://grafana.github.io/helm-charts
+    prometheus:
+      namespace: monitoring
+      url: https://prometheus-community.github.io/helm-charts
+    twingate:
+      namespace: networking
+      url: https://twingate.github.io/helm-charts
+
+  apps:
+    pihole:
+      namespace: home
+      repo: mojo
+      version: 2.14.0
+      valuesFrom:
+        - kind: ConfigMap
+          name: pihole-values
+          valuesKey: values.yaml
+    nfs-subdir-external-provisioner:
+      namespace: storage
+      repo: nfs
+      version: 4.0.18
+      valuesFrom:
+        - kind: ConfigMap
+          name: nfs-subdir-external-provisioner-values
+          valuesKey: values.yaml
+    grafana:
+      namespace: monitoring
+      repo: grafana
+      version: 6.55.0
+      valuesFrom:
+        - kind: ConfigMap
+          name: grafana-values
+          valuesKey: values.yaml
+    prometheus:
+      namespace: monitoring
+      repo: prometheus
+      version: 21.0.0
+      valuesFrom:
+        - kind: ConfigMap
+          name: prometheus-values
+          valuesKey: values.yaml
+    twingate-emerald-yak:
+      namespace: networking
+      path: connector
+      repo: twingate
+      version: 0.1.18
+      valuesFrom:
+        - kind: ConfigMap
+          name: twingate-emerald-yak-values
+          valuesKey: values.yaml
+

@@ -1,0 +1,12 @@
+{{ $flux := index .Values "flux-core" }}
+{{- range $app, $config := $flux.apps }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ $app }}-values"
+  namespace: {{ default $.Release.Namespace $config.namespace}}
+data:
+  values.yaml:
+    {{- toYaml ($.Files.Get (printf "config/%s.yaml" $app)) | indent 4 }}
+{{- end }}
