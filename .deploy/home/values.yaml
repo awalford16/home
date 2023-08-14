@@ -1,7 +1,7 @@
 flux-core:
   repositories:
     mojo:
-      namespace: home
+      namespace: networking
       url: https://mojo2600.github.io/pihole-kubernetes/
     nfs:
       namespace: storage
@@ -15,10 +15,13 @@ flux-core:
     twingate:
       namespace: networking
       url: https://twingate.github.io/helm-charts
+    external-dns:
+      namespace: networking
+      url: https://kubernetes-sigs.github.io/external-dns/
 
   apps:
     pihole:
-      namespace: home
+      namespace: networking
       repo: mojo
       version: 2.14.0
       valuesFrom:
@@ -57,5 +60,13 @@ flux-core:
       valuesFrom:
         - kind: ConfigMap
           name: twingate-emerald-yak-values
+          valuesKey: values.yaml
+    external-dns:
+      namespace: networking
+      repo: external-dns
+      version: 1.13.0
+      valuesFrom:
+        - kind: ConfigMap
+          name: external-dns-values
           valuesKey: values.yaml
 
