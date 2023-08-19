@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: adamwalford/home
+  repository: adamwalford/energy-monitor
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []

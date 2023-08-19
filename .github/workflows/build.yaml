@@ -1,46 +1,46 @@
-name: Build and Push Docker Image
+# name: Build and Push Docker Image
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-env:
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/home
+# env:
+#   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+#   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+#   IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/home
 
-jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
+# jobs:
+#   build-and-push:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
+#         with:
+#           fetch-depth: 0
 
-      - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v0
-        with:
-          versionSpec: "5.x"
+#       - name: Install GitVersion
+#         uses: gittools/actions/gitversion/setup@v0
+#         with:
+#           versionSpec: "5.x"
 
-      - name: Determine Version
-        id: gitversion
-        uses: gittools/actions/gitversion/execute@v0
+#       - name: Determine Version
+#         id: gitversion
+#         uses: gittools/actions/gitversion/execute@v0
 
-      - name: Build Docker image
-        run: docker build --build-arg GOARCH=${{ env.GOARCH }} -t ${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.semVer }}  .
-        env:
-          GOARCH: arm
+#       - name: Build Docker image
+#         run: docker build --build-arg GOARCH=${{ env.GOARCH }} -t ${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.semVer }}  .
+#         env:
+#           GOARCH: arm
 
-      - name: Log in to Docker Hub
-        run: docker login --username ${{ env.DOCKER_USERNAME }} --password-stdin <<< ${{ env.DOCKER_PASSWORD }}
+#       - name: Log in to Docker Hub
+#         run: docker login --username ${{ env.DOCKER_USERNAME }} --password-stdin <<< ${{ env.DOCKER_PASSWORD }}
 
-      - name: Push Docker image
-        run: docker push ${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.semVer }}
+#       - name: Push Docker image
+#         run: docker push ${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.semVer }}
 
-  # validate-deployment:
+#   # validate-deployment:
   #   runs-on: ubuntu-latest
 
   #   steps:

@@ -4,6 +4,7 @@ import (
         "net/http"
         "time"
         "os"
+        "fmt"
 
         "github.com/awalford16/home/energy"
 
@@ -15,9 +16,14 @@ import (
 func recordMetrics(e *energy.EnergyProvider) {
         go func() {
                 for {
-                        recentUsage := e.GetElectricUsage()
-                        electricityUsage.Set(recentUsage)
-                        time.Sleep(30 * time.Minute)
+                        recentUsage, err := e.GetElectricUsage()
+                        if err != nil {
+                                fmt.Println("Error getting electrical usage")
+                                time.Sleep(10 * time.Minute)
+                        } else {
+                                electricityUsage.Set(recentUsage)
+                                time.Sleep(30 * time.Minute)
+                        }
                 }
         }()
 
@@ -66,9 +72,16 @@ func main() {
 	product := os.Getenv("OCTOPUS_PRODUCT")
 	tariff := os.Getenv("OCTOPUS_TARIFF")
 
+        if mpan == "" || serialNumber == "" {
+                fmt.Println("METER_MPAN or METER_SERIAL_NUMBER environment variable is not defined.")
+                return
+        }
+
         provider := energy.NewEnergyProvider(mpan, serialNumber, product, tariff)
+
         recordMetrics(provider)
 
+        // Start prometheus metrics server
         http.Handle("/metrics", promhttp.Handler())
         http.ListenAndServe(":2112", nil)
 }

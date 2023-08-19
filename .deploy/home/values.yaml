@@ -69,4 +69,3 @@ flux-core:
         - kind: ConfigMap
           name: external-dns-values
           valuesKey: values.yaml
-

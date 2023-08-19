@@ -6,6 +6,7 @@ import (
 	"os"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 )
 
 func basicAuth(username, password string) string {
@@ -60,7 +61,7 @@ func NewElectricityCharges(standingCharge Tariff, standardUnit Tariff) *Electric
 	}
 }
 
-func (e *EnergyProvider) GetElectricUsage() float64 {
+func (e *EnergyProvider) GetElectricUsage() (float64, error) {
 	client := &http.Client{}
 
 	username := os.Getenv("OCTOPUS_ENERGY_API_KEY")
@@ -71,7 +72,7 @@ func (e *EnergyProvider) GetElectricUsage() float64 {
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Error getting electrical usage:", err)
-		return 0
+		return 0, err
 	}
 	defer resp.Body.Close()
 
@@ -79,10 +80,14 @@ func (e *EnergyProvider) GetElectricUsage() float64 {
     err = json.NewDecoder(resp.Body).Decode(&results)
     if err != nil {
         fmt.Println("Error: ", err)
-        return 0
+        return 0, err
     }
 
-	return results.Results[0].Consumption
+	if len(results.Results) < 0 {
+		return 0, errors.New("Failed to get energy usage")
+	}
+
+	return results.Results[0].Consumption, nil
 }
 
 func (e *EnergyProvider) GetElectricCharges() (*ElectricityCharges, error) {
@@ -109,6 +114,10 @@ func (e *EnergyProvider) GetElectricCharges() (*ElectricityCharges, error) {
 		if err != nil {
 			fmt.Println("Error: ", err)
 			return nil, err
+		}
+
+		if len(result.Results) < 1 {
+			return nil, errors.New("Failed to get energy charges")
 		}
 
 		results[charge] = result.Results[0]
