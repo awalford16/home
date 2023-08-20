@@ -7,7 +7,7 @@ Energy Monitor is a basic golang application which exports prometheus metrics co
 It requires the following environment variables being set which can be found under your Octopus energy account page:
 
 - OCTOPUS_ENERGY_API_KEY
-- name: METER_MPAN
-- name: METER_SERIAL_NUMBER
-- name: OCTOPUS_PRODUCT
-- name: OCTOPUS_TARIFF
+- METER_MPAN
+- METER_SERIAL_NUMBER
+- OCTOPUS_PRODUCT
+- OCTOPUS_TARIFF

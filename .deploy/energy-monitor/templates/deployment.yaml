@@ -26,24 +26,35 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- with .Values.envVars }}
           env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            - name: OCTOPUS_ENERGY_API_KEY
+              value: ""
+            - name: METER_MPAN
+              value: ""
+            - name: METER_SERIAL_NUMBER
+              value: ""
+            - name: OCTOPUS_PRODUCT
+              value: ""
+            - name: OCTOPUS_TARIFF
+              value: ""
           ports:
             - name: http
               containerPort: 2112
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /readyz
               port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          {{- with .Values.resources }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

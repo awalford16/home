@@ -3,7 +3,7 @@ FROM golang:1.17
 WORKDIR /app
 COPY pkg .
 
-ARG GOARCH=amd64
+ARG GOARCH=arm64
 ENV GOARCH=${GOARCH}
 ENV GOOS=linux
 

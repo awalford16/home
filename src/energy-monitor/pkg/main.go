@@ -77,11 +77,28 @@ func main() {
                 return
         }
 
-        provider := energy.NewEnergyProvider(mpan, serialNumber, product, tariff)
+        provider, err := energy.NewEnergyProvider(mpan, serialNumber, product, tariff)
+        if err != nil {
+                fmt.Println("Failed to initialise energy provider.")
+                return
+        }
 
         recordMetrics(provider)
 
         // Start prometheus metrics server
         http.Handle("/metrics", promhttp.Handler())
+
+        // Health probes
+        http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintln(w, "OK")
+	})
+
+	http.HandleFunc("/readyz", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintln(w, "OK")
+	})
+
+        fmt.Println("Starting server on port 2112...")
         http.ListenAndServe(":2112", nil)
 }

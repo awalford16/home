@@ -39,19 +39,26 @@ type ElectricityCharges struct {
 }
 
 type EnergyProvider struct {
+	Auth string
 	MPAN string
 	SerialNumber string
 	Product string
 	Tariff string
 }
 
-func NewEnergyProvider(mpan string, serialNumber string, product string, tariff string) *EnergyProvider {
+func NewEnergyProvider(mpan string, serialNumber string, product string, tariff string) (*EnergyProvider, error) {
+	apiKey := os.Getenv("OCTOPUS_ENERGY_API_KEY")
+	if apiKey == "" {
+		return nil, errors.New("OCTOPUS_ENERGY_API_KEY not set")
+	}
+
 	return &EnergyProvider{
+		Auth: basicAuth(os.Getenv("OCTOPUS_ENERGY_API_KEY"),""),
 		MPAN: mpan,
 		SerialNumber: serialNumber,
 		Product: product,
 		Tariff: tariff,
-	}
+	}, nil
 }
 
 func NewElectricityCharges(standingCharge Tariff, standardUnit Tariff) *ElectricityCharges {
@@ -64,11 +71,10 @@ func NewElectricityCharges(standingCharge Tariff, standardUnit Tariff) *Electric
 func (e *EnergyProvider) GetElectricUsage() (float64, error) {
 	client := &http.Client{}
 
-	username := os.Getenv("OCTOPUS_ENERGY_API_KEY")
 	url := fmt.Sprintf("https://api.octopus.energy/v1/electricity-meter-points/%s/meters/%s/consumption/", e.MPAN, e.SerialNumber)
 
 	req, err := http.NewRequest("GET", url, nil)
-	req.Header.Add("Authorization","Basic " + basicAuth(username,"")) 
+	req.Header.Add("Authorization","Basic " + e.Auth) 
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Error getting electrical usage:", err)
@@ -95,13 +101,12 @@ func (e *EnergyProvider) GetElectricCharges() (*ElectricityCharges, error) {
 
 	results := make(map[string]Tariff)
 	charges := []string { "standing-charges", "standard-unit-rates" }
-	username := os.Getenv("OCTOPUS_ENERGY_API_KEY")
 
 	for _, charge := range charges {
 		url := fmt.Sprintf("https://api.octopus.energy/v1/products/%s/electricity-tariffs/%s/%s/", e.Product, e.Tariff, charge)
 
 		req, err := http.NewRequest("GET", url, nil)
-		req.Header.Add("Authorization","Basic " + basicAuth(username,"")) 
+		req.Header.Add("Authorization","Basic " + e.Auth) 
 		resp, err := client.Do(req)
 		if err != nil {
 			fmt.Println("Error getting tariffs:", err)
