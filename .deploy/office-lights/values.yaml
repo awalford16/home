@@ -1,0 +1,26 @@
+replicaCount: 1
+
+image:
+  repository: adamwalford/office-lights
+  pullPolicy: IfNotPresent
+  # tag: 0.1.0-arm64
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+hueBridge:
+  secretName: hue
+
+mqtt:
+  secretName: mqtt

@@ -14,7 +14,7 @@ def on_message(client, userdata, message):
         state="FOCUS"
 
     hue.change_light_state(Groups.OFFICE, True, States[state])
-    time.sleep(10)
+    time.sleep(100)
     hue.change_light_state(Groups.OFFICE, False)
 
 if __name__ == "__main__":
