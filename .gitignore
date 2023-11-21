@@ -6,6 +6,7 @@ secrets/
 credentials.json
 token.json
 venv/
-charts/
+.deploy/charts/**/charts/
 
 .vscode/
+__pycache__/
