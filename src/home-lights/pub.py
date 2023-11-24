@@ -23,8 +23,8 @@ client.connect(broker_address, port)
 client.loop_start()
 
 # Publish a message to a topic
-topic = "lounge/lights"  # Replace with the topic you want to publish to
-message = "30"  # Your message here
+topic = "office/lights"  # Replace with the topic you want to publish to
+message = "FOCUS"  # Your message here
 # client.publish(topic, message)
 # client.publish(topic, "ALERT")
 # client.publish(topic, message)

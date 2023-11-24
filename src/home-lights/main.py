@@ -27,12 +27,11 @@ def on_message(client, userdata, message):
 
     if message.topic == Topics.LIVING_ROOM.value:
         # state in this context refers to bulb brightness
-        logger.info("Updating lounge")
         kasa = Kasa()
         asyncio.run(kasa.change_state(Groups.LIVING_ROOM.value, not is_off, state))
-    elif message.topic == Topics.OFFICE:
+    elif message.topic == Topics.OFFICE.value:
         # Will ignore state if set to off
-        hue.change_state(Groups.OFFICE.value, is_off, getattr(States, state, None))
+        hue.change_state(Groups.OFFICE.value, not is_off, getattr(States, state, None))
 
 
 if __name__ == "__main__":
@@ -55,6 +54,7 @@ if __name__ == "__main__":
             pass
     except KeyboardInterrupt:
         logger.info("Exiting...")
+        exit(0)
     finally:
         mqtt.client.disconnect()
         mqtt.client.loop_stop()

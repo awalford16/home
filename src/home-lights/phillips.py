@@ -36,13 +36,14 @@ class PhillipsHue(SmartDevice):
             "on": on,
         }
 
-        if not isinstance(state, States):
-            print("Invalid state, will not set lighting states")
-        elif on:
-            data.update(state.value)
+        if on:
+            if not isinstance(state, States):
+                print("Invalid state, will not set lighting states")
+            else:
+                data.update(state.value)
 
         response = requests.put(
-            f"{self.api}/{self.username}/groups/{group.value}/action", json=data
+            f"{self.api}/{self.username}/groups/{group}/action", json=data
         )
 
         if response.status_code == 200:

@@ -3,8 +3,8 @@ from enum import Enum
 
 
 class Groups(Enum):
-    OFFICE = 1
-    LIVING_ROOM = 2
+    OFFICE = "1"
+    LIVING_ROOM = "2"
 
 
 class SmartDevice(ABC):
