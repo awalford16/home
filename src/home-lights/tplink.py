@@ -16,14 +16,14 @@ class Kasa(SmartDevice):
             self.loop.stop()
         self.loop.close()
 
-    async def change_state(self, group, on, brightness=50):
+    async def change_state(self, group, on, brightness):
         await self.device.update()
         if on:
             try:
                 await self.device.turn_on()
-                await self.device.set_brightness(brightness)
-            except:
-                print("Failed to update device")
+                await self.device.set_brightness(int(brightness))
+            except Exception as e:
+                print(f"Failed to update device {e}")
         else:
             await self.device.turn_off()
 

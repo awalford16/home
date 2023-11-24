@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "office-lights.fullname" . }}
+  name: {{ include "home-lights.fullname" . }}
   labels:
-    {{- include "office-lights.labels" . | nindent 4 }}
+    {{- include "home-lights.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "office-lights.selectorLabels" . | nindent 6 }}
+      {{- include "home-lights.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -16,7 +16,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "office-lights.selectorLabels" . | nindent 8 }}
+        {{- include "home-lights.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -42,6 +42,13 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.mqtt.secretName }}
                   key: address
+            {{- with .Values.kasa }}
+            - name: KASA_BULB_IP
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $.Release.Name }}
+                  key: kasa.bulbIP
+            {{- end }}
             {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}

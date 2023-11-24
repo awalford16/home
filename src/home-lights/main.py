@@ -46,8 +46,8 @@ if __name__ == "__main__":
 
         # Start the network loop to process incoming and outgoing messages
         mqtt.client.loop_start()
-    except Exception:
-        logger.error("MQTT Configuration failed")
+    except Exception as e:
+        logger.error(f"MQTT Configuration failed: {e}")
 
     try:
         # Keep the program running to receive messages

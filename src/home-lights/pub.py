@@ -24,7 +24,7 @@ client.loop_start()
 
 # Publish a message to a topic
 topic = "lounge/lights"  # Replace with the topic you want to publish to
-message = "OFF"  # Your message here
+message = "30"  # Your message here
 # client.publish(topic, message)
 # client.publish(topic, "ALERT")
 # client.publish(topic, message)

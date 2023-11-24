@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: adamwalford/home-lights
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # tag: 0.1.0-arm64
 
 imagePullSecrets: []
@@ -24,3 +24,6 @@ hueBridge:
 
 mqtt:
   secretName: mqtt
+
+kasa: {}
+  # bulbIP: 
