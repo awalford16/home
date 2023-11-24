@@ -8,6 +8,9 @@ class Groups(Enum):
 
 
 class SmartDevice(ABC):
+    # def __init__(self, logger):
+    #     self.log = logger
+
     @abstractmethod
     def change_state(self, group: Groups, on: bool, state):
         pass

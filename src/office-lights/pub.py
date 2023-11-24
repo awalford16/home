@@ -1,8 +1,10 @@
 import paho.mqtt.client as mqtt
 
+
 # Callback when the client publishes a message
 def on_publish(client, userdata, mid):
     print("Message published")
+
 
 # Create an MQTT client instance
 client = mqtt.Client()
@@ -21,8 +23,8 @@ client.connect(broker_address, port)
 client.loop_start()
 
 # Publish a message to a topic
-topic = "office/lights"  # Replace with the topic you want to publish to
-message = "FOCUS"  # Your message here
+topic = "lounge/lights"  # Replace with the topic you want to publish to
+message = "OFF"  # Your message here
 # client.publish(topic, message)
 # client.publish(topic, "ALERT")
 # client.publish(topic, message)

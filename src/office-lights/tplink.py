@@ -7,6 +7,14 @@ from smart_device import SmartDevice
 class Kasa(SmartDevice):
     def __init__(self, address=""):
         self.device = SmartBulb(os.environ.get("KASA_BULB_IP", address))
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+
+    def __del__(self):
+        # Destructor: Close the event loop when the object is about to be destroyed
+        if hasattr(self, "loop") and self.loop.is_running():
+            self.loop.stop()
+        self.loop.close()
 
     async def change_state(self, group, on, brightness=50):
         await self.device.update()
