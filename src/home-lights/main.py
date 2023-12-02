@@ -1,12 +1,10 @@
-from phillips import PhillipsHue, States
-from tplink import Kasa
-from mqtt import MQTT
+from tplink import TpLinkHandler
 from enum import Enum
-from smart_device import Groups
 import logging
 import asyncio
-
-hue = PhillipsHue()
+from phillips import PhillipsHue
+import asyncio_mqtt as aiomqtt
+from smart_device import States
 
 FORMAT = "%(asctime)s %(levelname)s %(message)s"
 logging.basicConfig(format=FORMAT)
@@ -19,42 +17,30 @@ class Topics(Enum):
     OFFICE = "office/lights"
 
 
-# Callback when a message is received from the broker
-def on_message(client, userdata, message):
-    state = message.payload.decode()
-    logger.info(f"Setting state to {state} for {message.topic}")
-    is_off = state == "OFF"
+async def main():
+    handlers = {
+        "lounge/lights": TpLinkHandler(logger, "192.168.0.51"),
+        "office/lights": PhillipsHue(logger),
+    }
+    async with aiomqtt.Client("192.168.0.120") as client:
+        async with client.messages() as messages:
+            await client.subscribe(Topics.LIVING_ROOM.value)
+            await client.subscribe(Topics.OFFICE.value)
 
-    if message.topic == Topics.LIVING_ROOM.value:
-        # state in this context refers to bulb brightness
-        kasa = Kasa()
-        asyncio.run(kasa.change_state(Groups.LIVING_ROOM.value, not is_off, state))
-    elif message.topic == Topics.OFFICE.value:
-        # Will ignore state if set to off
-        hue.change_state(Groups.OFFICE.value, not is_off, getattr(States, state, None))
+            async for message in messages:
+                logger.info(
+                    f"Setting {message.topic.value} to {message.payload.decode('utf-8')}"
+                )
+                try:
+                    if message.payload == b"OFF":
+                        handlers[message.topic.value].turn_off()
+                    else:
+                        handlers[message.topic.value].turn_on(
+                            States[message.payload.decode("utf-8")]
+                        )
+                except Exception as e:
+                    handlers[message.topic.value].log.error(f"Failed to update: {e}")
 
 
 if __name__ == "__main__":
-    try:
-        mqtt = MQTT(logger, on_message)
-
-        mqtt.subscribe("office/lights")
-        mqtt.subscribe("lounge/lights")
-
-        logger.info("Subscribed")
-
-        # Start the network loop to process incoming and outgoing messages
-        mqtt.client.loop_start()
-    except Exception as e:
-        logger.error(f"MQTT Configuration failed: {e}")
-
-    try:
-        # Keep the program running to receive messages
-        while True:
-            pass
-    except KeyboardInterrupt:
-        logger.info("Exiting...")
-        exit(0)
-    finally:
-        mqtt.client.disconnect()
-        mqtt.client.loop_stop()
+    asyncio.run(main())

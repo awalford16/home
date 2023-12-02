@@ -1,36 +1,26 @@
-import os
 import asyncio
 from kasa import SmartBulb
-from smart_device import SmartDevice
+from smart_device import SmartDevice, States
 
 
-class Kasa(SmartDevice):
-    def __init__(self, address=""):
-        self.device = SmartBulb(os.environ.get("KASA_BULB_IP", address))
-        self.loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self.loop)
+class TpLinkHandler(SmartDevice):
+    def __init__(self, logger, address):
+        super().__init__(logger)
+        self.device = SmartBulb(address)
+        self.loop = asyncio.get_event_loop()
 
-    def __del__(self):
-        # Destructor: Close the event loop when the object is about to be destroyed
-        if hasattr(self, "loop") and self.loop.is_running():
-            self.loop.stop()
-        self.loop.close()
+    def shutdown(self):
+        asyncio.run_coroutine_threadsafe(self.device.turn_off(), self.loop)
 
-    async def change_state(self, group, on, brightness):
-        await self.device.update()
-        if on:
-            try:
-                await self.device.turn_on()
-                await self.device.set_brightness(int(brightness))
-            except Exception as e:
-                print(f"Failed to update device {e}")
-        else:
-            await self.device.turn_off()
+    def turn_on(self, state: States):
+        # super().turn_on(state)
+        asyncio.run_coroutine_threadsafe(self.device.turn_on(), self.loop)
+        self.set_brightness(state.value)
 
+    def set_brightness(self, num: int):
+        self.log.info(f"Setting light to {num}%")
+        asyncio.run_coroutine_threadsafe(self.device.set_brightness(num), self.loop)
+        asyncio.run_coroutine_threadsafe(self.device.update(), self.loop)
 
-# if __name__ == "__main__":
-#     try:
-#         bulb = Kasa()
-#         asyncio.run(bulb.change_state(True))
-#     except:
-#         print("Failed to update state")
+    def __repr__(self):
+        return self.details
