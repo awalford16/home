@@ -9,7 +9,7 @@ class TpLinkHandler(SmartDevice):
         self.device = SmartBulb(address)
         self.loop = asyncio.get_event_loop()
 
-    def shutdown(self):
+    def turn_off(self):
         asyncio.run_coroutine_threadsafe(self.device.turn_off(), self.loop)
 
     def turn_on(self, state: States):

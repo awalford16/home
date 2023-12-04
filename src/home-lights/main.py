@@ -30,7 +30,8 @@ async def main():
     while True:
         try:
             async with aiomqtt.Client(MQTT_SERVER) as client:
-                logger.info("Connected to MQTT Server")
+                logger.info(f"Connected to MQTT Server: {client._connected.result()}")
+
                 async with client.messages() as messages:
                     await client.subscribe(Topics.LIVING_ROOM.value)
                     await client.subscribe(Topics.OFFICE.value)
