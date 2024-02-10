@@ -1,0 +1,26 @@
+# http:
+#   server_host: 0.0.0.0
+#   ip_ban_enabled: true
+#   login_attempts_threshold: 5
+#   use_x_forwarded_for: true
+#   trusted_proxies:
+#   # Pod CIDR
+#   - 10.42.0.0/16
+#   # Node CIDR
+#   - 192.168.0.0/24
+
+image:
+  repository: homeassistant/home-assistant
+  tag: 2024.1.4
+
+ingress:
+  main:
+    enabled: true
+    hosts:
+      - host: home.192.168.0.120.nip.io
+        paths:
+          - path: /
+
+persistence:
+  config:
+    enabled: true

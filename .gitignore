@@ -3,9 +3,12 @@ secrets/
 
 *.tgz
 
+*.pyc
 credentials.json
 token.json
 venv/
 charts/
 
 .vscode/
+
+inventory.ini

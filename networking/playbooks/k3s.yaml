@@ -1,0 +1,32 @@
+---
+- name: Update Packages on Linux Nodes
+  hosts: all
+  become: yes  # Run tasks with elevated privileges (sudo)
+
+  tasks:
+    - name: Update package cache
+      package_facts:
+        manager: auto
+
+    - name: Update all packages
+      package:
+        name: "*"
+        state: latest
+
+
+- name: Install k3s master
+  hosts: k3s-master
+  become: yes 
+
+  tasks:
+    - name: Install k3s
+      command: "curl -sfL {{ k3s_url }} | sh -"
+
+
+- name: Install k3s workers
+  hosts: k3s-nodes
+  gather_facts: false  # Disable gathering facts for this example
+
+  tasks:
+    - name: Display variable
+      command: "curl -sfL {{ k3s_url }} | K3S_URL={{ mast_node_url }} K3S_TOKEN={{ lookup('env', 'K3S_MASTER_KEY') }} sh -"
