@@ -13,15 +13,29 @@
         name: "*"
         state: latest
 
-
 - name: Install k3s master
   hosts: k3s-master
+  roles:
+    - kwoodson.yedit
   become: yes 
 
   tasks:
     - name: Install k3s
-      command: "curl -sfL {{ k3s_url }} | sh -"
+      shell: "curl -sfL {{ k3s_url }} | sh -"
+    
+    - name: Update kubeconfig server
+      yedit:
+        src: /etc/rancher/k3s/k3s.yaml
+        key: clusters[0].cluster.server
+        value: "https://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:6443"
+    
+    - name: Read Kubeconfig File
+      ansible.builtin.fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: "{{ kube_config_file_location }}"
+        flat: yes
 
+    # Read and save master key
 
 - name: Install k3s workers
   hosts: k3s-nodes
@@ -29,4 +43,4 @@
 
   tasks:
     - name: Display variable
-      command: "curl -sfL {{ k3s_url }} | K3S_URL={{ mast_node_url }} K3S_TOKEN={{ lookup('env', 'K3S_MASTER_KEY') }} sh -"
+      shell: "curl -sfL {{ k3s_url }} | K3S_URL={{ mast_node_url }} K3S_TOKEN={{ lookup('env', 'K3S_MASTER_KEY') }} sh -"
