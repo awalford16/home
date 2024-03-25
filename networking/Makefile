@@ -1,11 +1,12 @@
-PULUMI_DIR ?= test
+PULUMI_DIR ?= infra
 
-.PHONY: test
-test: infra ansible
+.PHONY: up
+up: infra ansible
 
 .PHONY: infra
 infra:
-	pulumi -C ${PULUMI_DIR} up --yes
+	export LINDE_TOKEN=$(cat ~/.linode) && \
+		pulumi -C ${PULUMI_DIR} up --yes
 
 .PHONY: ansible
 ansible:
