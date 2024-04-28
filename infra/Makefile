@@ -8,7 +8,7 @@ up: infra ansible
 .PHONY: infra
 infra:
 	export LINODE_TOKEN=${LINODE_TOKEN} && \
-		pulumi -C ${PULUMI_DIR} up --stack ${stack} --yes
+		pulumi up --stack ${stack} --yes
 
 .PHONY: ansible
 ansible:

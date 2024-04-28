@@ -1,7 +1,7 @@
 from jinja2 import Environment, FileSystemLoader
 import os
 
-TEMPLATE_FILES = os.path.dirname(__file__) + "/../templates"
+TEMPLATE_FILES = os.path.dirname(__file__) + "/templates"
 
 
 def create_inventory(ip_address, template_file, destination):

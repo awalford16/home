@@ -48,7 +48,7 @@
     - name: Read Kubeconfig File
       ansible.builtin.fetch:
         src: /etc/rancher/k3s/k3s.yaml
-        dest: "{{ kube_config_file_location }}"
+        dest: "{{ kube_config_file_location }}/{{ stack | default('default') }}"
         flat: yes
       tags: k3s
 

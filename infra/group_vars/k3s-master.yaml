@@ -1,2 +1,2 @@
 k3s_url: https://get.k3s.io
-kube_config_file_location: ~/.kube/k3s.yaml
+kube_config_file_location: ~/.kube
