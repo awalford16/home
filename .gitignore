@@ -11,5 +11,6 @@ charts/
 
 .vscode/
 
+__pycache__/
 inventory.ini
 Pulumi.**.yaml

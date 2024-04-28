@@ -22,18 +22,35 @@
   tasks:
     - name: Install k3s
       shell: "curl -sfL {{ k3s_url }} | sh -"
+      tags: k3s
     
     - name: Update kubeconfig server
       yedit:
         src: /etc/rancher/k3s/k3s.yaml
         key: clusters[0].cluster.server
         value: "https://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:6443"
+      tags: k3s
     
+    - name: Update kubeconfig context name
+      yedit:
+        src: /etc/rancher/k3s/k3s.yaml
+        key: contexts[0].name
+        value: "{{ stack | default('default') }}"
+      tags: k3s
+
+    - name: Update kubeconfig cluster context
+      yedit:
+        src: /etc/rancher/k3s/k3s.yaml
+        key: current-context
+        value: "{{ stack | default('default') }}"
+      tags: k3s
+
     - name: Read Kubeconfig File
       ansible.builtin.fetch:
         src: /etc/rancher/k3s/k3s.yaml
         dest: "{{ kube_config_file_location }}"
         flat: yes
+      tags: k3s
 
     # Read and save master key
 
@@ -44,3 +61,4 @@
   tasks:
     - name: Display variable
       shell: "curl -sfL {{ k3s_url }} | K3S_URL={{ mast_node_url }} K3S_TOKEN={{ lookup('env', 'K3S_MASTER_KEY') }} sh -"
+      tags: k3s

@@ -4,18 +4,20 @@ import pulumi
 import pulumi_linode
 import inventory
 import os
+from pathlib import Path
 
-SSH_FILE_PATH = os.environ.get("SSH_FILE_PATH", "~/.ssh/id_rsa.pub")
+SSH_FILE_PATH = os.environ.get("SSH_FILE_PATH", f"{str(Path.home())}/.ssh/id_ed25519.pub")
 
 ssh_file = open(SSH_FILE_PATH, "r")
+stack_name = pulumi.get_stack()
 
 # Create a Linode resource (Linode Instance)
 instance = pulumi_linode.Instance(
-    "k3s-master",
+    f"k3s-{stack_name}-master",
     authorized_keys=[ssh_file.readline().replace("\n", "")],
     type="g6-nanode-1",
     region="eu-west",
-    label="k8s-master",
+    label=f"{stack_name}",
     image="linode/ubuntu22.04",
 )
 
