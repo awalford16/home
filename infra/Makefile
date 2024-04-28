@@ -1,4 +1,5 @@
-PULUMI_DIR ?= infra
+PULUMI_DIR ?= deploy
+LINODE_TOKEN=$$(cat ~/.linode)
 stack ?= lab
 
 .PHONY: up
@@ -6,7 +7,7 @@ up: infra ansible
 
 .PHONY: infra
 infra:
-	export LINODE_TOKEN=$$(cat ~/.linode) && \
+	export LINODE_TOKEN=${LINODE_TOKEN} && \
 		pulumi -C ${PULUMI_DIR} up --stack ${stack} --yes
 
 .PHONY: ansible
