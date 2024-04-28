@@ -21,6 +21,9 @@ flux-core:
     t3n:
       namespace: apps
       url: https://storage.googleapis.com/t3n-helm-charts
+    k8s-at-home:
+      namespace: home
+      url: https://k8s-at-home.com/charts/
 
   apps:
     pihole:
@@ -79,4 +82,12 @@ flux-core:
       valuesFrom:
         - kind: ConfigMap
           name: mosquitto-values
+          valuesKey: values.yaml
+    home-assistant:
+      namespace: home
+      repo: k8s-at-home
+      version: 13.4.2
+      valuesFrom:
+        - kind: ConfigMap
+          name: home-assistant
           valuesKey: values.yaml

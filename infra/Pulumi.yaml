@@ -1,0 +1,10 @@
+name: test
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: A minimal Linode Python Pulumi program
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: ""

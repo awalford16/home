@@ -3,9 +3,14 @@ secrets/
 
 *.tgz
 
+*.pyc
 credentials.json
 token.json
 venv/
 charts/
 
 .vscode/
+
+__pycache__/
+inventory.ini
+Pulumi.**.yaml
