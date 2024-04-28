@@ -1,5 +1,4 @@
 ansible
 pulumi>=3.0.0,<4.0.0
 pulumi-linode>=4.0.0,<5.0.0
-pulumi-command
 jinja2
