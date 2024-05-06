@@ -53,6 +53,9 @@
       tags: k3s
 
     # Read and save master key
+    - name: Save Master Node Key
+      ansible.builtin.shell: cat /var/lib/rancher/k3s/server/node-token
+      register: master_key
 
 - name: Install k3s workers
   hosts: k3s-nodes
@@ -60,5 +63,5 @@
 
   tasks:
     - name: Display variable
-      shell: "curl -sfL {{ k3s_url }} | K3S_URL={{ mast_node_url }} K3S_TOKEN={{ lookup('env', 'K3S_MASTER_KEY') }} sh -"
+      shell: "curl -sfL {{ k3s_url }} | K3S_URL={{ master_node_url }} K3S_TOKEN={{ master_key.stdout }} sh -"
       tags: k3s

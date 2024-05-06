@@ -13,6 +13,7 @@ SSH_FILE_PATH = os.environ.get("SSH_FILE_PATH", f"{str(Path.home())}/.ssh/id_ed2
 ssh_file = open(SSH_FILE_PATH, "r")
 stack_name = pulumi.get_stack()
 
+### MASTER NODE
 # Create a Linode resource (Linode Instance)
 instance = pulumi_linode.Instance(
     f"k3s-{stack_name}-master",
@@ -23,12 +24,11 @@ instance = pulumi_linode.Instance(
     image="linode/ubuntu22.04",
 )
 
-# Write to inventory file
+# Write to inventory file and workers group_vars with master IP address
 inventory_file = os.path.join(os.path.dirname(__file__), "inventory.ini")
-var_file = os.path.join(os.path.dirname(__file__), "group_vars", "k3s-nodes.yaml")
 instance.ip_address.apply(
     lambda ip: inventory.create_inventory(
-        ip_address=ip, template_file="inventory.ini.tpl", destination=inventory_file
+        template_file="inventory.ini.tpl", destination=inventory_file, ip_address=ip
     )
 )
 

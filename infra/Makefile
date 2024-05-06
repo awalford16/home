@@ -16,4 +16,4 @@ ansible:
 
 .PHONY: down
 down:
-	pulumi -C ${PULUMI_DIR} destroy --stack ${stack} --yes
+	pulumi destroy --stack ${stack} --yes
