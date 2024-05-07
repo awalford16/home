@@ -1,9 +1,9 @@
 [k3s-master]
-{{ ip_address }} ansible_ssh_user={{ user or "root" }}
+{{ ip_address }} node_name=master ansible_ssh_user={{ user or "root" }}
 
 [k3s-workers]
 {%- for worker in workers %}
-{{ worker }} ansible_ssh_user={{ user or "root" }}
+{{ worker }} node_name=worker-{{ loop.index }} ansible_ssh_user={{ user or "root" }}
 {%- endfor %}
 
 [k3s-workers:vars]

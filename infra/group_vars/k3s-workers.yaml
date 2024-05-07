@@ -1,2 +1,2 @@
 k3s_url: https://get.k3s.io
-master_node_url: https://192.168.0.120:6443
+# master_node_url: https://192.168.0.120:6443

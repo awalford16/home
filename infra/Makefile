@@ -13,7 +13,7 @@ infra:
 
 .PHONY: ansible
 ansible:
-	ansible-playbook -i ./inventory.ini playbooks/k3s.yaml --extra-vars="stack=${stack}"
+	ansible-playbook -vv -i ./inventory.ini playbooks/k3s.yaml --extra-vars="stack=${stack}"
 
 .PHONY: down
 down:

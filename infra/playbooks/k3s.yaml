@@ -12,6 +12,10 @@
       package:
         name: "*"
         state: latest
+  
+    - name: Update Hostname
+      hostname:
+        name: "{{ node_name }}"
 
 - name: Install k3s master
   hosts: k3s-master
@@ -59,9 +63,11 @@
       register: master_key
       tags: k3s
 
-    - name: Set master key as host fact
-      set_fact:
-        master_key: "{{ master_key.stdout }}"
+    # Add MASTER HOST and key to be accessed in following playbook for node registration
+    - name: Register master host
+      add_host:
+        name: "MASTER"
+        MASTER_KEY: "{{ master_key.stdout }}"
       tags: k3s
 
 - name: Install k3s workers
@@ -70,6 +76,8 @@
   become: yes
 
   tasks:
-    - name: Display variable
-      shell: "curl -sfL {{ k3s_url }} | K3S_URL={{ master_node_url }} K3S_TOKEN={{ hostvars['k3s-master']['master_key'] }} sh -"
-      tags: k3s
+    - name: Register Worker Node
+      shell: "curl -sfL {{ k3s_url }} | K3S_URL={{ master_node_url }} K3S_TOKEN={{ hostvars['MASTER']['MASTER_KEY'] }} sh -"
+      tags: 
+        - k3s
+        - workers
