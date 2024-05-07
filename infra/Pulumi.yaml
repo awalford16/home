@@ -5,6 +5,7 @@ runtime:
     virtualenv: venv
 description: Deploy Linode nodes
 config:
+  worker_nodes: 0
   pulumi:tags:
     value:
       pulumi:template: ""
