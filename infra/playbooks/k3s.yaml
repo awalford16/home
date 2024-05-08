@@ -12,9 +12,14 @@
       package:
         name: "*"
         state: latest
+  
+    - name: Update Hostname
+      hostname:
+        name: "{{ node_name }}"
 
 - name: Install k3s master
   hosts: k3s-master
+  gather_facts: false
   roles:
     - kwoodson.yedit
   become: yes 
@@ -53,12 +58,26 @@
       tags: k3s
 
     # Read and save master key
+    - name: Save Master Node Key
+      ansible.builtin.shell: cat /var/lib/rancher/k3s/server/node-token
+      register: master_key
+      tags: k3s
+
+    # Add MASTER HOST and key to be accessed in following playbook for node registration
+    - name: Register master host
+      add_host:
+        name: "MASTER"
+        MASTER_KEY: "{{ master_key.stdout }}"
+      tags: k3s
 
 - name: Install k3s workers
-  hosts: k3s-nodes
+  hosts: k3s-workers
   gather_facts: false  # Disable gathering facts for this example
+  become: yes
 
   tasks:
-    - name: Display variable
-      shell: "curl -sfL {{ k3s_url }} | K3S_URL={{ mast_node_url }} K3S_TOKEN={{ lookup('env', 'K3S_MASTER_KEY') }} sh -"
-      tags: k3s
+    - name: Register Worker Node
+      shell: "curl -sfL {{ k3s_url }} | K3S_URL={{ master_node_url }} K3S_TOKEN={{ hostvars['MASTER']['MASTER_KEY'] }} sh -"
+      tags: 
+        - k3s
+        - workers

@@ -1,10 +1,11 @@
-name: test
+name: nodes
 runtime:
   name: python
   options:
     virtualenv: venv
-description: A minimal Linode Python Pulumi program
+description: Deploy Linode nodes
 config:
+  worker_nodes: 0
   pulumi:tags:
     value:
       pulumi:template: ""
