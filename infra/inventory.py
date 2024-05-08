@@ -11,9 +11,8 @@ def get_file_path(file):
 def create_inventory(template_file, destination, **kwargs):
     environment = Environment(loader=FileSystemLoader(TEMPLATE_FILES))
     template = environment.get_template(template_file)
-   
-    kwargs_string = ', '.join(['{}={}'.format(key, value) for key, value in kwargs.items()])
-    print(kwargs_string)
+  
+    # Create file path for destination if it does not exist
     os.makedirs(get_file_path(destination), exist_ok=True)
     content = template.render(**kwargs)
     with open(destination, mode="w", encoding="utf-8") as message:
