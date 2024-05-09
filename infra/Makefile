@@ -1,10 +1,11 @@
 PULUMI_DIR ?= deploy
 LINODE_TOKEN=$$(cat ~/.linode)
+GITHUB_TOKEN=$$(cat ~/.github)
 stack ?= lab
 workers ?= 0
 
 .PHONY: up
-up: infra ansible
+up: infra ansible bootstrap
 
 .PHONY: infra
 infra:
@@ -14,6 +15,11 @@ infra:
 .PHONY: ansible
 ansible:
 	ansible-playbook -i ./inventory.ini playbooks/k3s.yaml --extra-vars="stack=${stack}"
+
+.PHONY: bootstrap
+bootstrap:
+	export GITHUB_TOKEN=${GITHUB_TOKEN} && \
+		pulumi -C $@ up --stack ${stack} --yes
 
 .PHONY: down
 down:
