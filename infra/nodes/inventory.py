@@ -1,7 +1,7 @@
 from jinja2 import Environment, FileSystemLoader
 import os
 
-TEMPLATE_FILES = os.path.dirname(__file__) + "/templates"
+TEMPLATE_FILES = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)) + "/templates"
 
 
 def get_file_path(file):

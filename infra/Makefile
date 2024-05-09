@@ -5,12 +5,12 @@ stack ?= lab
 workers ?= 0
 
 .PHONY: up
-up: infra ansible bootstrap
+up: nodes ansible bootstrap
 
-.PHONY: infra
-infra:
+.PHONY: nodes
+nodes:
 	export LINODE_TOKEN=${LINODE_TOKEN} && \
-		pulumi up --stack ${stack} -c worker_nodes=${workers} --yes
+		pulumi up -C $@ --stack ${stack} -c worker_nodes=${workers} --yes
 
 .PHONY: ansible
 ansible:

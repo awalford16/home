@@ -17,7 +17,7 @@ stack_name = pulumi.get_stack()
 config = pulumi.Config()
 
 # Define inventoary file for access via Ansible
-inventory_file = os.path.join(os.path.dirname(__file__), "inventory.ini")
+inventory_file = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, "inventory.ini"))
 
 instances = []
 for i in range(config.get_int("worker_nodes") + 1):

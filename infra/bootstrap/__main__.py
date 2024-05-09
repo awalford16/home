@@ -2,6 +2,7 @@ import pulumi
 import pulumi_github as github
 import pulumi_tls as tls
 import pulumi_flux as flux
+from pygit2 import Repository
 
 import os
 
@@ -16,8 +17,8 @@ GITHUB_REPO = os.environ.get("GITHUB_REPO", "home")
 GITHUB_OWNER = os.environ.get("GITHUB_OWNER", config.get("github:owner"))
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 
-branch = "k3s-bootstrapping"
-target_path = f"clusters/infra/clusters/{stack_name}"
+branch = Repository('.').head.shorthand
+target_path = f"clusters/{stack_name}"
 
 ssh_key = tls.PrivateKey("key", algorithm="ECDSA", ecdsa_curve="P256")
 provider = flux.Provider(
