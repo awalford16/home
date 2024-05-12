@@ -71,7 +71,7 @@ with open(f"{BOOTSTRAP_VALUES}/core.yaml") as f:
         "bootstrap",
         ChartOpts(
             chart="flux-core",
-            version="0.0.3",
+            version="0.0.4",
             namespace=namespace.id,
             fetch_opts=FetchOpts(
                 repo="https://awalford16.github.io/charts",
