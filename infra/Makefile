@@ -18,7 +18,7 @@ ansible:
 
 .PHONY: bootstrap
 bootstrap:
-	export GITHUB_TOKEN=${GITHUB_TOKEN} && \
+	export GITHUB_TOKEN=${GITHUB_TOKEN} && export KUBECONFIG="~/.kube/${stack}" && \
 		pulumi -C $@ up --stack ${stack} --yes
 
 .PHONY: down
