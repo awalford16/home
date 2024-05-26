@@ -17,6 +17,7 @@ import yaml
 stack_name = pulumi.get_stack()
 config = pulumi.Config()
 
+FLUX_VERSION = 'v2.3.0'
 GITHUB_REPO = os.environ.get("GITHUB_REPO", "home")
 GITHUB_OWNER = os.environ.get("GITHUB_OWNER", config.get("github:owner"))
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
@@ -56,6 +57,7 @@ deploy_key = github.RepositoryDeployKey(
 cluster_bootstrap = flux.FluxBootstrapGit(
     "flux",
     path=target_path,
+    version=FLUX_VERSION,
     opts=pulumi.ResourceOptions(provider=flux_provider, depends_on=deploy_key)
 )
 

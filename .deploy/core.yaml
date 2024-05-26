@@ -5,6 +5,10 @@ repositories:
     branch: flux-deploy
 
 apps:
+  setup:
+    path: .deploy/core
+    type: GitRepository
+    repo: home
   home:
     # namespace: home
     path: .deploy/home
