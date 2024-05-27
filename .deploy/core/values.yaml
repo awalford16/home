@@ -1,0 +1,6 @@
+namespaces:
+  - networking
+  - monitoring
+  - home
+  - storage
+  - media

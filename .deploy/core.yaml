@@ -2,9 +2,13 @@ repositories:
   home:
     kind: GitRepository
     url: https://github.com/awalford16/home
-    gitBranch: services
+    branch: flux-deploy
 
 apps:
+  setup:
+    path: .deploy/core
+    type: GitRepository
+    repo: home
   home:
     # namespace: home
     path: .deploy/home

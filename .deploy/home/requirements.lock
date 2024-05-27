@@ -1,6 +1,6 @@
 dependencies:
 - name: flux-core
   repository: https://awalford16.github.io/charts
-  version: 0.0.3
-digest: sha256:991410690c8c1dbcf82ec666f61f5b03c8aba4efbe0b914ff70c8cc10401e995
-generated: "2023-07-07T13:15:38.126164+01:00"
+  version: 0.0.6
+digest: sha256:c45aee8dfc5394a7a00cb8ea06d06255cda488b9b08857298d42bc135d6589ec
+generated: "2024-05-27T11:17:11.068847+01:00"

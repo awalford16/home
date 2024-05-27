@@ -3,4 +3,4 @@ version: 0.0.1
 dependencies:
   - name: flux-core
     repository: https://awalford16.github.io/charts
-    version: 0.0.3
+    version: 0.0.6
