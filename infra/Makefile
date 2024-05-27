@@ -5,12 +5,16 @@ stack ?= lab
 workers ?= 0
 
 .PHONY: up
-up: nodes ansible bootstrap
+up: nodes wait_for_ready ansible bootstrap
 
 .PHONY: nodes
 nodes:
 	export LINODE_TOKEN=${LINODE_TOKEN} && \
 		pulumi up -C $@ --stack ${stack} -c worker_nodes=${workers} --yes
+
+.PHONY: wait_for_ready
+wait_for_ready:
+	@$$(sleep 10)
 
 .PHONY: ansible
 ansible:
