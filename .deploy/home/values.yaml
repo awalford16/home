@@ -76,7 +76,7 @@ flux-core:
           name: external-dns-values
           valuesKey: values.yaml
     mosquitto:
-      namespace: apps
+      namespace: home
       repo: t3n
       version: 2.4.1
       valuesFrom:
