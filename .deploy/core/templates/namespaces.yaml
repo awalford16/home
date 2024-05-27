@@ -1,4 +1,5 @@
 {{- range $name := .Values.namespaces }}
+---
 apiVersion: v1
 kind: Namespace
 metadata:
