@@ -1,2 +1,8 @@
 k3s_url: https://get.k3s.io
 kube_config_file_location: ~/.kube
+kube_master_node: true
+
+k3s_args: "INSTALL_K3S_EXEC='--flannel-backend=none --disable-network-policy'"
+
+cilium_version: v1.9
+cilium_install_url: "https://raw.githubusercontent.com/cilium/cilium/{{ cilium_version }}/install/kubernetes/quick-install.yaml"

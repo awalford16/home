@@ -26,7 +26,7 @@
 
   tasks:
     - name: Install k3s
-      shell: "curl -sfL {{ k3s_url }} | sh -"
+      shell: "curl -sfL {{ k3s_url }} | {{ k3s_args }} sh -"
       tags: k3s
     
     - name: Update kubeconfig server
@@ -81,3 +81,21 @@
       tags: 
         - k3s
         - workers
+
+- name: Setup Cilium
+  hosts: [k3s-master, k3s-workers]
+  become: yes
+
+  tasks:
+    - name: Mount eBPF FS
+      shell: mount bpffs -t bpf /sys/fs/bpf
+      tags:
+        - k3s
+        - cilium
+
+    - name: Install Cilium
+      shell: kubectl apply -f {{ cilium_install_url }}
+      when: kube_master_node is defined
+      tags:
+        - k3s
+        - cilium
