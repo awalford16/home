@@ -89,13 +89,37 @@
   tasks:
     - name: Mount eBPF FS
       shell: mount bpffs -t bpf /sys/fs/bpf
+      when: cilium_enabled
       tags:
         - k3s
         - cilium
 
-    - name: Install Cilium
-      shell: kubectl apply -f {{ cilium_install_url }}
-      when: kube_master_node is defined
+- name: Install Cilium (Helm)
+  hosts: localhost
+
+  tasks:
+    - name: Add Cilium Repo
+      kubernetes.core.helm_repository:
+        name: cilium
+        repo_url: https://helm.cilium.io
+      when: cilium_enabled
       tags:
-        - k3s
+        - cilium
+
+    - name: Install Cilium
+      kubernetes.core.helm:
+        kubeconfig: "~/.kube/{{ stack }}"
+        release_namespace: "{{ cilium_namespace | default('kube-system') }}"
+        name: cilium
+        chart_ref: cilium/cilium
+        chart_version: "{{ cilium_chart_version }}"
+        values:
+          hubble:
+            listenAddress: ":4244"
+            relay:
+              enabled: true
+            ui:
+              enabled: true
+      when: cilium_enabled
+      tags:
         - cilium
