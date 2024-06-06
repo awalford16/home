@@ -2,5 +2,3 @@ k3s_url: https://get.k3s.io
 kube_config_file_location: ~/.kube
 kube_master_node: true
 
-k3s_args: "INSTALL_K3S_EXEC='--flannel-backend=none --disable-network-policy'"
-

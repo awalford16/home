@@ -1,3 +1,5 @@
+k3s_args: ""
+
 cilium_enabled: true
 cilium_helm_repo: ""
 

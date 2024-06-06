@@ -25,10 +25,16 @@
   become: yes 
 
   tasks:
+    - name: Set k3s args to determine k3s networking
+      set_fact:
+        k3s_args: "INSTALL_K3S_EXEC='--flannel-backend=none --disable-network-policy'"
+      when: cilium_enabled
+      tags: k3s
+
     - name: Install k3s
       shell: "curl -sfL {{ k3s_url }} | {{ k3s_args }} sh -"
       tags: k3s
-    
+   
     - name: Update kubeconfig server
       yedit:
         src: /etc/rancher/k3s/k3s.yaml
@@ -120,6 +126,8 @@
               enabled: true
             ui:
               enabled: true
+              service:
+                type: NodePort
       when: cilium_enabled
       tags:
         - cilium
