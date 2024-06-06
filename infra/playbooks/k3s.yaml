@@ -27,7 +27,7 @@
   tasks:
     - name: Set k3s args to determine k3s networking
       set_fact:
-        k3s_args: "INSTALL_K3S_EXEC='--flannel-backend=none --disable-network-policy'"
+        k3s_args: "INSTALL_K3S_EXEC='--flannel-backend=none --disable-network-policy' {{ k3s_args }}"
       when: cilium_enabled
       tags: k3s
 
