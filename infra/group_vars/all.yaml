@@ -1,0 +1,8 @@
+k3s_args: ""
+
+cilium_enabled: true
+cilium_helm_repo: ""
+
+cilium_version: v1.9
+cilium_chart_version: 1.15.5
+cilium_install_url: "https://raw.githubusercontent.com/cilium/cilium/{{ cilium_version }}/install/kubernetes/quick-install.yaml"

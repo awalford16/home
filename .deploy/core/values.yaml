@@ -1,6 +1,5 @@
+# -- Define a list of namespaces to deploy to the cluster
 namespaces:
   - networking
   - monitoring
   - home
-  - storage
-  - media
