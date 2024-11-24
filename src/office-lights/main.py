@@ -3,22 +3,33 @@ from mqtt import MQTT
 import time
 
 hue = PhillipsHue()
+IS_DISABLED = False
 
 
 # Callback when a message is received from the broker
 def on_message(client, userdata, message):
+    global IS_DISABLED
     state = message.payload.decode()
-    print(f"Setting state to {state}")
 
-    if state == "OFF":
+    # Disable/enable office lights
+    if state == "DISABLE" or state == "ENABLE":
         hue.change_light_state(Groups.OFFICE, False)
+        IS_DISABLED = state == "DISABLE"
+        print(f"Motion Disabled: {IS_DISABLED}")
         return
 
-    if not hasattr(States, state):
-        print("Invalid State, will default to FOCUS")
-        state = "FOCUS"
+    if not IS_DISABLED:
+        print(f"Setting state to {state}")
 
-    hue.change_light_state(Groups.OFFICE, True, States[state])
+        if state == "OFF":
+            hue.change_light_state(Groups.OFFICE, False)
+            return
+
+        if not hasattr(States, state):
+            print("Invalid State, will default to FOCUS")
+            state = "FOCUS"
+
+        hue.change_light_state(Groups.OFFICE, True, States[state])
 
 
 if __name__ == "__main__":

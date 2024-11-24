@@ -1,0 +1,20 @@
+version: '2'
+services:
+  homebridge:
+    image: oznu/homebridge
+    restart: always
+    network_mode: "host"
+    ports:
+      - 8181:8080
+    volumes:
+      - /exports/homebridge:/homebridge
+    environment:
+      - PUID=995
+      - PGID=100
+      - HOMEBRIDGE_CONFIG_UI=1
+      - HOMEBRIDGE_CONFIG_UI_PORT=8181
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"
