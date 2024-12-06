@@ -1,8 +1,9 @@
 from phillips import PhillipsHue, Groups, States
 from mqtt import MQTT
 from timer import DeviceTimer
+import logging
 
-MQTT_SUBSCRIPTION = "office/test"
+MQTT_SUBSCRIPTION = "office/lights"
 DEFAULT_LIGHT_STATE = "FOCUS"
 IS_DISABLED = False
 
@@ -12,7 +13,7 @@ activity_timer = DeviceTimer()
 
 # Callback when timer completes
 def turn_off_light_after_timeout():
-    print("Activity Timer Expired")
+    logging.info("Activity Timer Expired")
     hue.change_light_state(Groups.OFFICE, False)
 
 
@@ -28,19 +29,19 @@ def on_message(client, userdata, message):
     if state == "DISABLE" or state == "ENABLE":
         hue.change_light_state(Groups.OFFICE, False)
         IS_DISABLED = state == "DISABLE"
-        print(f"Motion Disabled: {IS_DISABLED}")
+        logging.info(f"Motion Disabled: {IS_DISABLED}")
         return
 
     if not IS_DISABLED:
         # If state is not supported, return with no action
         if not hasattr(States, state):
-            print(f"Invalid State, nothing to do")
+            logging.info(f"Invalid State, nothing to do")
             return
 
         # Update the light state
-        print(f"Setting state to {state}")
+        logging.info(f"Setting state to {state}")
         hue.change_light_state(Groups.OFFICE, True, States[state])
-        print(f"Starting light timeout of: {activity_timer.timeout}")
+        logging.info(f"Starting light timeout of: {activity_timer.timeout}")
 
         # Start the timer
         activity_timer.start()
@@ -55,14 +56,14 @@ if __name__ == "__main__":
         # Start the network loop to process incoming and outgoing messages
         mqtt.client.loop_start()
     except Exception:
-        print("MQTT Configuration failed")
+        logging.error("MQTT Configuration failed")
 
     try:
         # Keep the program running to receive messages
         while True:
             pass
     except KeyboardInterrupt:
-        print("Exiting...")
+        logging.warning("Exiting...")
     finally:
         # Cancel any active timers and disconnect from MQTT
         activity_timer.cancel()

@@ -1,5 +1,6 @@
 import time
 import threading
+import logging
 
 
 class DeviceTimer:
@@ -8,7 +9,7 @@ class DeviceTimer:
         self.active_timer = None
 
     def new_timer(self, callback):
-        print("Resetting activity timer")
+        logging.info("Resetting activity timer")
         # Cancel any active timers
         self.cancel()
         self.active_timer = threading.Timer(self.timeout, lambda: callback())
