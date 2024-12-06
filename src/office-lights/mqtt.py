@@ -1,4 +1,5 @@
 import paho.mqtt.client as mqtt
+from timer import DeviceTimer
 from constants import MQTT_SERVER
 import os
 import sys
@@ -47,7 +48,7 @@ def test_on_message(client, userdata, msg):
     print(msg.topic + " " + str(msg.payload))
 
 
-TEST_TOPIC = "office/lights"
+TEST_TOPIC = "office/test"
 
 if __name__ == "__main__":
     # Arg parser to run tester
@@ -71,7 +72,7 @@ if __name__ == "__main__":
         client.loop_start()
 
         # Publish a message to a topic
-        message = "OFF"  # Your message here
+        message = "TEST"  # Your message here
         # client.publish(topic, message)
         # client.publish(topic, "ALERT")
         # client.publish(topic, message)
