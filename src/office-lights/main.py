@@ -2,7 +2,7 @@ from phillips import PhillipsHue, Groups, States
 from mqtt import MQTT
 from timer import DeviceTimer
 
-MQTT_SUBSCRIPTION = "office/lights"
+MQTT_SUBSCRIPTION = "office/test"
 DEFAULT_LIGHT_STATE = "FOCUS"
 IS_DISABLED = False
 
@@ -32,14 +32,13 @@ def on_message(client, userdata, message):
         return
 
     if not IS_DISABLED:
-        print(f"Setting state to {state}")
-
         # If state is not supported, return with no action
         if not hasattr(States, state):
             print(f"Invalid State, nothing to do")
             return
 
         # Update the light state
+        print(f"Setting state to {state}")
         hue.change_light_state(Groups.OFFICE, True, States[state])
         print(f"Starting light timeout of: {activity_timer.timeout}")
 

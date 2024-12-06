@@ -72,7 +72,7 @@ if __name__ == "__main__":
         client.loop_start()
 
         # Publish a message to a topic
-        message = "TEST"  # Your message here
+        message = "OFF"  # Your message here
         # client.publish(topic, message)
         # client.publish(topic, "ALERT")
         # client.publish(topic, message)
