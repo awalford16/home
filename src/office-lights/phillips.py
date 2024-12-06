@@ -1,6 +1,7 @@
 import requests
 from enum import Enum
 import os
+import logging
 
 
 class States(Enum):
@@ -40,7 +41,7 @@ class PhillipsHue:
         }
 
         if not isinstance(mode, States):
-            print("Invalid mode, will not set lighting states")
+            logging.warning("Invalid mode, will not set lighting states")
         elif on:
             data.update(mode.value)
 
@@ -49,10 +50,12 @@ class PhillipsHue:
         )
 
         if response.status_code == 200:
-            print("POST request successful")
-            print("Response:", response.text)
+            logging.info("POST request successful")
+            logging.info(f"Response: {response.text}")
         else:
-            print("POST request failed with status code:", response.status_code)
+            logging.warning(
+                "POST request failed with status code:", response.status_code
+            )
 
 
 if __name__ == "__main__":

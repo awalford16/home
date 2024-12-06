@@ -10,6 +10,8 @@ IS_DISABLED = False
 hue = PhillipsHue()
 activity_timer = DeviceTimer()
 
+logging.basicConfig(level=logging.INFO)
+
 
 # Callback when timer completes
 def turn_off_light_after_timeout():
@@ -21,9 +23,6 @@ def turn_off_light_after_timeout():
 def on_message(client, userdata, message):
     global IS_DISABLED, TIMEOUT, activity_timer
     state = message.payload.decode()
-
-    # Start a new timer
-    activity_timer.new_timer(lambda: turn_off_light_after_timeout())
 
     # Disable/enable office lights
     if state == "DISABLE" or state == "ENABLE":
@@ -43,7 +42,8 @@ def on_message(client, userdata, message):
         hue.change_light_state(Groups.OFFICE, True, States[state])
         logging.info(f"Starting light timeout of: {activity_timer.timeout}")
 
-        # Start the timer
+        # Start a new timer
+        activity_timer.new_timer(lambda: turn_off_light_after_timeout())
         activity_timer.start()
 
 

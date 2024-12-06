@@ -3,6 +3,7 @@ from timer import DeviceTimer
 from constants import MQTT_SERVER
 import os
 import sys
+import logging
 
 
 class MQTT:
@@ -32,9 +33,9 @@ class MQTT:
     # Callback when the client receives a CONNACK response from the broker
     def on_connect(self, client, userdata, flags, rc):
         if rc == 0:
-            print("Connected to broker")
+            logging.info("Connected to broker")
         else:
-            print("Connection failed with code", rc)
+            logging.error("Connection failed with code", rc)
 
 
 #########################
@@ -48,7 +49,7 @@ def test_on_message(client, userdata, msg):
     print(msg.topic + " " + str(msg.payload))
 
 
-TEST_TOPIC = "office/test"
+TEST_TOPIC = "office/lights"
 
 if __name__ == "__main__":
     # Arg parser to run tester
@@ -72,7 +73,7 @@ if __name__ == "__main__":
         client.loop_start()
 
         # Publish a message to a topic
-        message = "OFF"  # Your message here
+        message = "TEST"  # Your message here
         # client.publish(topic, message)
         # client.publish(topic, "ALERT")
         # client.publish(topic, message)
