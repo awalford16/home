@@ -1,6 +1,0 @@
-mode: ContinuousDeployment
-nextVersion: 0.1
-branches:
-  main:
-    regex: ^main$
-    increment: Patch
