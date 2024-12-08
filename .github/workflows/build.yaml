@@ -20,6 +20,10 @@ jobs:
         with:
           fetch-depth: 0  # This ensures we get the full history
 
+      - name: Set up Docker Buildx
+        run: |
+          docker buildx create --use
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -28,11 +32,8 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build \
+          docker buildx build \
             --tag ${DOCKERHUB_REPO}/${{ matrix.app }}:${{ github.sha }} \
-            ./src/${{ matrix.app }}
-
-      - name: Push Docker Image
-        if: always()
-        run: |
-          docker push ${DOCKERHUB_REPO}/${{ matrix.app }}:${{ github.sha }}
+            --platform linux/arm64,linux/amd64 \
+            --file ./src/${{ matrix.app }} \
+            --push .
