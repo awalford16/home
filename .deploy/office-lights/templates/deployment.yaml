@@ -30,18 +30,18 @@ spec:
             - name: HUE_BRIDGE_ADDRESS
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.hueBridge.secretName }}
-                  key: address
+                  name: office-lights
+                  key: hue_address
             - name: HUE_BRIDGE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.hueBridge.secretName }}
-                  key: username
+                  name: office-lights
+                  key: hue_username
             - name: MQTT_ADDRESS
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.mqtt.secretName }}
-                  key: address
+                  name: office-lights
+                  key: mqtt_address
             {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
