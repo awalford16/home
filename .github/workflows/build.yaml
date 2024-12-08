@@ -33,5 +33,4 @@ jobs:
           docker buildx build \
             --tag ${DOCKERHUB_REPO}/${{ matrix.app }}:${{ github.sha }} \
             --platform linux/arm64,linux/amd64 \
-            --file ./src/${{ matrix.app }} \
-            --push .
+            --push ./src/${{ matrix.app }}
