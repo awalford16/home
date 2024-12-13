@@ -2,7 +2,7 @@ env:
   - name: EXTERNAL_DNS_PIHOLE_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: pihole-password
+        name: networking-pihole-password
         key: password
   - name: EXTERNAL_DNS_PIHOLE_TLS_SKIP_VERIFY
     value: "true"
@@ -13,7 +13,7 @@ sources:
   - ingress
 
 extraArgs:
-  - --pihole-server=http://pihole-web.networking.svc.cluster.local
+  - --pihole-server=http://networking-pihole-web.networking.svc.cluster.local
 
 podSecurityContext:
   fsGroup: 65534

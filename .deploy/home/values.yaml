@@ -16,8 +16,12 @@ flux-core:
       url: https://storage.googleapis.com/t3n-helm-charts
     k8s-at-home:
       url: https://k8s-at-home.com/charts/
+    home:
+      kind: GitRepository
+      url: https://github.com/awalford16/home
 
   apps:
+    # Networking
     pihole:
       namespace: networking
       repo: mojo
@@ -26,6 +30,16 @@ flux-core:
         - kind: ConfigMap
           name: pihole-values
           valuesKey: values.yaml
+    external-dns:
+      namespace: networking
+      repo: external-dns
+      version: 1.13.0
+      valuesFrom:
+        - kind: ConfigMap
+          name: external-dns-values
+          valuesKey: values.yaml
+    
+    # Storage
     nfs-subdir-external-provisioner:
       namespace: storage
       repo: nfs
@@ -34,6 +48,8 @@ flux-core:
         - kind: ConfigMap
           name: nfs-subdir-external-provisioner-values
           valuesKey: values.yaml
+
+    # Monitoring
     grafana:
       namespace: monitoring
       repo: grafana
@@ -50,23 +66,8 @@ flux-core:
         - kind: ConfigMap
           name: prometheus-values
           valuesKey: values.yaml
-    # twingate-emerald-yak:
-    #   namespace: networking
-    #   path: connector
-    #   repo: twingate
-    #   version: 0.1.18
-    #   valuesFrom:
-    #     - kind: ConfigMap
-    #       name: twingate-emerald-yak-values
-    #       valuesKey: values.yaml
-    external-dns:
-      namespace: networking
-      repo: external-dns
-      version: 1.13.0
-      valuesFrom:
-        - kind: ConfigMap
-          name: external-dns-values
-          valuesKey: values.yaml
+    
+    # Home
     mosquitto:
       namespace: home
       repo: t3n
@@ -75,11 +76,23 @@ flux-core:
         - kind: ConfigMap
           name: mosquitto-values
           valuesKey: values.yaml
-    home-assistant:
+    # home-assistant:
+    #   namespace: home
+    #   repo: k8s-at-home
+    #   version: 13.4.2
+    #   valuesFrom:
+    #     - kind: ConfigMap
+    #       name: home-assistant-values
+    #       valuesKey: values.yaml
+    office-lights:
       namespace: home
-      repo: k8s-at-home
-      version: 13.4.2
+      repo: home
+      type: GitRepository
+      path: .deploy/office-lights
       valuesFrom:
         - kind: ConfigMap
-          name: home-assistant
+          name: office-lights-values
           valuesKey: values.yaml
+        - kind: Secret
+          name: office-lights-secrets
+          valuesKey: secrets.yaml
