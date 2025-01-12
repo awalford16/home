@@ -20,6 +20,10 @@ wait_for_ready:
 ansible:
 	ansible-playbook -i ./inventory.ini playbooks/k3s.yaml --extra-vars="stack=${stack}"
 
+.PHONY: cilium
+cilium:
+	ansible-playbook -i ./inventory.ini playbooks/k3s.yaml --extra-vars="stack=${stack}" -t cilium
+
 .PHONY: bootstrap
 bootstrap:
 	export GITHUB_TOKEN=${GITHUB_TOKEN} && export KUBECONFIG="~/.kube/${stack}" && \

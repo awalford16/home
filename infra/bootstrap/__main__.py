@@ -17,16 +17,18 @@ import yaml
 stack_name = pulumi.get_stack()
 config = pulumi.Config()
 
-FLUX_VERSION = 'v2.3.0'
+FLUX_VERSION = "v2.3.0"
 GITHUB_REPO = os.environ.get("GITHUB_REPO", "home")
 GITHUB_OWNER = os.environ.get("GITHUB_OWNER", config.get("github:owner"))
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 
 # ../../.deploy
-default_bootstrap_values_path = os.path.abspath(os.path.join(os.getcwd(), os.path.pardir, os.path.pardir, ".deploy"))
+default_bootstrap_values_path = os.path.abspath(
+    os.path.join(os.getcwd(), os.path.pardir, os.path.pardir, ".deploy")
+)
 BOOTSTRAP_VALUES = os.environ.get("BOOTSTRAP_VALUES", default_bootstrap_values_path)
 
-branch = Repository('.').head.shorthand
+branch = Repository(".").head.shorthand
 target_path = f"clusters/{stack_name}"
 
 ssh_key = tls.PrivateKey("key", algorithm="ECDSA", ecdsa_curve="P256")
@@ -36,14 +38,16 @@ flux_provider = flux.Provider(
     git=flux.ProviderGitArgs(
         url=f"ssh://git@github.com/{GITHUB_OWNER}/{GITHUB_REPO}.git",
         branch=branch,
-        ssh=flux.ProviderGitSshArgs(username="git", private_key=ssh_key.private_key_pem)
-    )
+        ssh=flux.ProviderGitSshArgs(
+            username="git", private_key=ssh_key.private_key_pem
+        ),
+    ),
 )
 
 kube_provider = kubernetes.Provider(
     "kube",
     kubeconfig=f"{os.path.expanduser('~')}/.kube/{stack_name}",
-    context=stack_name
+    context=stack_name,
 )
 
 deploy_key = github.RepositoryDeployKey(
@@ -58,27 +62,31 @@ cluster_bootstrap = flux.FluxBootstrapGit(
     "flux",
     path=target_path,
     version=FLUX_VERSION,
-    opts=pulumi.ResourceOptions(provider=flux_provider, depends_on=deploy_key)
+    opts=pulumi.ResourceOptions(provider=flux_provider, depends_on=deploy_key),
 )
 
 with open(f"{BOOTSTRAP_VALUES}/core.yaml") as f:
     data = yaml.full_load(f)
-    
+
     namespace = kubernetes.core.v1.Namespace(
         "bootstrap",
-        opts=pulumi.ResourceOptions(provider=kube_provider, depends_on=[cluster_bootstrap])
+        opts=pulumi.ResourceOptions(
+            provider=kube_provider, depends_on=[cluster_bootstrap]
+        ),
     )
 
     bootstrap = Chart(
         "bootstrap",
         ChartOpts(
             chart="flux-core",
-            version="0.0.6",
+            version="0.1.0",
             namespace=namespace.id,
             fetch_opts=FetchOpts(
                 repo="https://awalford16.github.io/charts",
             ),
-            values=data
+            values=data,
         ),
-        opts=pulumi.ResourceOptions(provider=kube_provider, depends_on=[cluster_bootstrap, namespace])
+        opts=pulumi.ResourceOptions(
+            provider=kube_provider, depends_on=[cluster_bootstrap, namespace]
+        ),
     )
