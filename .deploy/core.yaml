@@ -1,16 +1,16 @@
 repositories:
-  home:
+  core:
     kind: GitRepository
     url: https://github.com/awalford16/home
     branch: new-home-cluster
 
 apps:
   setup:
-    path: .deploy/core
+    path: .deploy/setup
     type: GitRepository
-    repo: home
+    repo: core
   home:
     # namespace: home
     path: .deploy/home
     type: GitRepository
-    repo: home
+    repo: core
