@@ -20,9 +20,15 @@ wait_for_ready:
 ansible:
 	ansible-playbook -i ./inventory.ini playbooks/k3s.yaml --extra-vars="stack=${stack}"
 
-.PHONY: cilium
-cilium:
+.PHONY: ansible-cilium
+ansible-cilium:
 	ansible-playbook -i ./inventory.ini playbooks/k3s.yaml --extra-vars="stack=${stack}" -t cilium
+
+
+.PHONY: ansible-system
+ansible-system:
+	ansible-playbook -i ./inventory.ini playbooks/k3s.yaml --extra-vars="stack=${stack}" -t system
+
 
 .PHONY: bootstrap
 bootstrap:

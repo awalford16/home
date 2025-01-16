@@ -7,15 +7,31 @@
     - name: Update package cache
       package_facts:
         manager: auto
+      tags:
+        - system
 
     - name: Update all packages
       package:
         name: "*"
         state: latest
+      tags:
+        - system
   
     - name: Update Hostname
       hostname:
         name: "{{ node_name }}"
+      tags:
+        - system
+    
+    - name: Set MOTD
+      copy:
+        src: "files/motd_{{ ansible_hostname }}"
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: '644'
+      tags:
+        - system
 
 - name: Install k3s master
   hosts: k3s-master
