@@ -25,19 +25,22 @@
     
     - name: Set MOTD
       copy:
-        src: "files/motd_{{ ansible_hostname }}"
+        src: "files/motd_{{ group_names[0] }}"
         dest: /etc/motd
         owner: root
         group: root
         mode: '644'
       tags:
         - system
+    
+    - name: Install apt packages
+      ansible.builtin.apt:
+        name: open-iscsi
+        state: present
 
 - name: Install k3s master
   hosts: k3s-master
   gather_facts: false
-  roles:
-    - kwoodson.yedit
   become: yes 
 
   tasks:
@@ -51,31 +54,16 @@
       shell: "curl -sfL {{ k3s_url }} | {{ k3s_args }} sh -"
       tags: k3s
    
-    - name: Update kubeconfig server
-      yedit:
-        src: /etc/rancher/k3s/k3s.yaml
-        key: clusters[0].cluster.server
-        value: "https://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:6443"
-      tags: k3s
-    
-    - name: Update kubeconfig context name
-      yedit:
-        src: /etc/rancher/k3s/k3s.yaml
-        key: contexts[0].name
-        value: "{{ stack | default('default') }}"
-      tags: k3s
-
-    - name: Update kubeconfig cluster context
-      yedit:
-        src: /etc/rancher/k3s/k3s.yaml
-        key: current-context
-        value: "{{ stack | default('default') }}"
-      tags: k3s
+    - name: Edit kube config for remote access
+      ansible.builtin.shell: |
+        cp {{ k3s_config_file_path }} {{ k3s_config_file_path }}.remote
+        sed -i 's/127.0.0.1/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}/g' {{ k3s_config_file_path }}.remote
+        sed -i 's/default/{{ stack | default('default') }}/g' {{ k3s_config_file_path }}.remote
 
     - name: Read Kubeconfig File
       ansible.builtin.fetch:
-        src: /etc/rancher/k3s/k3s.yaml
-        dest: "{{ kube_config_file_location }}/{{ stack | default('default') }}"
+        src: "{{ k3s_config_file_path }}.remote"
+        dest: "{{ k3s_local_config_file_location }}/{{ stack | default('default') }}"
         flat: yes
       tags: k3s
 

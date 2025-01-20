@@ -19,7 +19,7 @@ config = pulumi.Config()
 
 FLUX_VERSION = "v2.3.0"
 GITHUB_REPO = os.environ.get("GITHUB_REPO", "home")
-GITHUB_OWNER = os.environ.get("GITHUB_OWNER", config.get("github:owner"))
+GITHUB_OWNER = os.environ.get("GITHUB_OWNER", "awalford16")
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 
 # ../../.deploy

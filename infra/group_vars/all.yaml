@@ -1,6 +1,7 @@
 k3s_args: ""
+k3s_config_file_path: /etc/rancher/k3s/k3s.yaml
 
-cilium_enabled: true
+cilium_enabled: false
 cilium_helm_repo: ""
 
 cilium_version: v1.9
