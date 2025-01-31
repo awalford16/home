@@ -1,5 +1,5 @@
 name: home
-version: 0.1.0
+version: 0.1.1
 dependencies:
   - name: flux-core
     repository: https://awalford16.github.io/charts
