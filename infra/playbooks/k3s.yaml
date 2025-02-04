@@ -25,7 +25,7 @@
     
     - name: Set MOTD
       copy:
-        src: "files/motd_{{ group_names[0] }}"
+        src: "files/motd_{{ group_name }}"
         dest: /etc/motd
         owner: root
         group: root
@@ -51,7 +51,7 @@
       tags: k3s
 
     - name: Install k3s
-      shell: "curl -sfL {{ k3s_url }} | {{ k3s_args }} sh -"
+      shell: "curl -sfL {{ k3s_url }} | INSTALL_K3S_VERSION={{ k3s_version }} {{ k3s_args }} sh -"
       tags: k3s
    
     - name: Edit kube config for remote access
@@ -87,7 +87,7 @@
 
   tasks:
     - name: Register Worker Node
-      shell: "curl -sfL {{ k3s_url }} | K3S_URL={{ master_node_url }} K3S_TOKEN={{ hostvars['MASTER']['MASTER_KEY'] }} sh -"
+      shell: "curl -sfL {{ k3s_url }} | INSTALL_K3S_VERSION={{ k3s_version }} K3S_URL={{ master_node_url }} K3S_TOKEN={{ hostvars['MASTER']['MASTER_KEY'] }} sh -"
       tags: 
         - k3s
         - workers
