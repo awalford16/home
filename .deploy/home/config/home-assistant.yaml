@@ -31,3 +31,4 @@ configuration:
 persistence:
   enabled: true
   storageClass: nfs-client
+  size: 6Gi
