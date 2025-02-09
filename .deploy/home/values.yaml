@@ -14,8 +14,10 @@ flux-core:
       url: https://kubernetes-sigs.github.io/external-dns/
     t3n:
       url: https://storage.googleapis.com/t3n-helm-charts
-    k8s-at-home:
-      url: https://k8s-at-home.com/charts/
+    pajikos:
+      url: https://pajikos.github.io/home-assistant-helm-chart/ 
+    # longhorn:
+    #   url: https://charts.longhorn.io
     home:
       kind: GitRepository
       url: https://github.com/awalford16/home
@@ -40,6 +42,14 @@ flux-core:
           valuesKey: values.yaml
     
     # Storage
+    # longhorn:
+    #   namespace: longhorn-system
+    #   repo: longhorn
+    #   version: 1.7.2
+    #   valuesFrom:
+    #     - kind: ConfigMap
+    #       name: longhorn-values
+    #       valuesKey: values.yaml
     nfs-subdir-external-provisioner:
       namespace: storage
       repo: nfs
@@ -76,14 +86,14 @@ flux-core:
         - kind: ConfigMap
           name: mosquitto-values
           valuesKey: values.yaml
-    # home-assistant:
-    #   namespace: home
-    #   repo: k8s-at-home
-    #   version: 13.4.2
-    #   valuesFrom:
-    #     - kind: ConfigMap
-    #       name: home-assistant-values
-    #       valuesKey: values.yaml
+    home-assistant:
+      namespace: home
+      repo: pajikos
+      version: 0.2.104
+      valuesFrom:
+        - kind: ConfigMap
+          name: home-assistant-values
+          valuesKey: values.yaml
     office-lights:
       namespace: home
       repo: home

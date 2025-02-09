@@ -7,21 +7,40 @@
     - name: Update package cache
       package_facts:
         manager: auto
+      tags:
+        - system
 
     - name: Update all packages
       package:
         name: "*"
         state: latest
+      tags:
+        - system
   
     - name: Update Hostname
       hostname:
         name: "{{ node_name }}"
+      tags:
+        - system
+    
+    - name: Set MOTD
+      copy:
+        src: "files/motd_{{ group_name }}"
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: '644'
+      tags:
+        - system
+    
+    - name: Install apt packages
+      ansible.builtin.apt:
+        name: open-iscsi
+        state: present
 
 - name: Install k3s master
   hosts: k3s-master
   gather_facts: false
-  roles:
-    - kwoodson.yedit
   become: yes 
 
   tasks:
@@ -32,34 +51,19 @@
       tags: k3s
 
     - name: Install k3s
-      shell: "curl -sfL {{ k3s_url }} | {{ k3s_args }} sh -"
+      shell: "curl -sfL {{ k3s_url }} | INSTALL_K3S_VERSION={{ k3s_version }} {{ k3s_args }} sh -"
       tags: k3s
    
-    - name: Update kubeconfig server
-      yedit:
-        src: /etc/rancher/k3s/k3s.yaml
-        key: clusters[0].cluster.server
-        value: "https://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:6443"
-      tags: k3s
-    
-    - name: Update kubeconfig context name
-      yedit:
-        src: /etc/rancher/k3s/k3s.yaml
-        key: contexts[0].name
-        value: "{{ stack | default('default') }}"
-      tags: k3s
-
-    - name: Update kubeconfig cluster context
-      yedit:
-        src: /etc/rancher/k3s/k3s.yaml
-        key: current-context
-        value: "{{ stack | default('default') }}"
-      tags: k3s
+    - name: Edit kube config for remote access
+      ansible.builtin.shell: |
+        cp {{ k3s_config_file_path }} {{ k3s_config_file_path }}.remote
+        sed -i 's/127.0.0.1/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}/g' {{ k3s_config_file_path }}.remote
+        sed -i 's/default/{{ stack | default('default') }}/g' {{ k3s_config_file_path }}.remote
 
     - name: Read Kubeconfig File
       ansible.builtin.fetch:
-        src: /etc/rancher/k3s/k3s.yaml
-        dest: "{{ kube_config_file_location }}/{{ stack | default('default') }}"
+        src: "{{ k3s_config_file_path }}.remote"
+        dest: "{{ k3s_local_config_file_location }}/{{ stack | default('default') }}"
         flat: yes
       tags: k3s
 
@@ -83,7 +87,7 @@
 
   tasks:
     - name: Register Worker Node
-      shell: "curl -sfL {{ k3s_url }} | K3S_URL={{ master_node_url }} K3S_TOKEN={{ hostvars['MASTER']['MASTER_KEY'] }} sh -"
+      shell: "curl -sfL {{ k3s_url }} | INSTALL_K3S_VERSION={{ k3s_version }} K3S_URL={{ master_node_url }} K3S_TOKEN={{ hostvars['MASTER']['MASTER_KEY'] }} sh -"
       tags: 
         - k3s
         - workers

@@ -10,17 +10,25 @@
 #   - 192.168.0.0/24
 
 image:
-  repository: homeassistant/home-assistant
-  tag: 2024.1.4
+  tag: 2025.2.1
 
 ingress:
-  main:
-    enabled: true
-    hosts:
-      - host: home.192.168.0.120.nip.io
-        paths:
-          - path: /
+  # Enable ingress for home assistant
+  enabled: true
+  className: traefik
+
+  hosts:
+    - host: home.192.168.1.151.nip.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+  tls: []
+
+configuration:
+  enabled: true
 
 persistence:
-  config:
-    enabled: true
+  enabled: true
+  storageClass: nfs-client
+  size: 6Gi

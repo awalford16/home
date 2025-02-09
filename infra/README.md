@@ -4,13 +4,27 @@ The Infra directory is designed for setting up test infrastructure using Pulumi 
 
 A Linode token is required to provision the VMs. The make commands will assume a token is stored under `~/.linode` or can be passed directly to the make command with `make infra LINODE_TOKEN=...`
 
-## Pulumi
+## Nodes
+
+### Pulumi
 
 The Pulumi stage will provision small VMs in Linode adding an SSH key from `~/.ssh/id_ed25519.pub`
 
 It can be triggered by running `make nodes`
 
-Using the IP address of the newly created node, an inventory.ini file will be generated from the one found in the `templates/` directory. 
+Using the IP address of the newly created node, an inventory.ini file will be generated from the one found in the `templates/` directory.
+
+### Raspberry Pi Setup
+
+Setup SD card with 64-bit Pi lite OS
+
+Add the following to `cmdline.txt`:
+
+```
+cgroup_memory=1 cgroup_enable=memory ip=192.168.1.50::192.168.1.1:255.255.255.0:rpimaster:eth0:off
+```
+
+Also add `arm_64bit=1` to `config.txt`
 
 
 ## Ansible
