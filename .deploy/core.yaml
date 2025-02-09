@@ -2,7 +2,7 @@ repositories:
   core:
     kind: GitRepository
     url: https://github.com/awalford16/home
-    branch: new-home-cluster
+    branch: main
 
 apps:
   setup:
